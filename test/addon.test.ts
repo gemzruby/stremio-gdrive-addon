@@ -6,6 +6,18 @@ import { verifyVideo } from '../src/services/stream-signer';
 const call = (path: string) => handleRequest(new Request(`https://addon.example${path}`), env);
 const body = async (path: string): Promise<{ resources: string[]; metas: Record<string, unknown>[]; meta: { name: string } | null; streams: { url: string }[] }> => JSON.parse(await (await call(path)).text());
 describe('addon', () => {
+  it('shows a public home page without private addon details', async () => {
+    const response = await call('/');
+    const html = await response.text();
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Content-Type')).toContain('text/html');
+    expect(html).toContain('Powered by DriveMio');
+    expect(html).not.toContain(env.ADDON_TOKEN);
+    expect(html).not.toContain(media[0].driveFileId);
+    const head = await handleRequest(new Request('https://addon.example/', { method: 'HEAD' }), env);
+    expect(head.status).toBe(200);
+    expect(head.body).toBeNull();
+  });
   it('serves manifest and hides routes behind token', async () => {
     expect((await body('/private-token/manifest.json')).resources).toEqual(['catalog', 'meta', 'stream']);
     expect((await call('/wrong/manifest.json')).status).toBe(404);

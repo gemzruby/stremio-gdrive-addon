@@ -1,5 +1,7 @@
 # DriveMio
 
+[<img src="captures/Screenshot_2026_09_13_17_57_35.png"/>](captures/Screenshot_2026_09_13_17_57_35.png)
+
 DriveMio is a personal Stremio addon for streaming private Google Drive videos on Stremio-compatible clients such as Nuvio TV. A Cloudflare Worker serves the addon catalog and streams video from Drive with signed URLs and byte-range support. Media metadata is generated locally from a Drive folder; your Google credentials and generated catalog stay out of the source repository.
 
 The project is designed for a single owner and does not provide multi-user accounts or video transcoding.

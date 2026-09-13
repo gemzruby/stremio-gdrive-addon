@@ -16,12 +16,28 @@ function sameToken(a: string, b: string): boolean {
 }
 const manifest = { id: 'com.tam.private-drive', version: '1.0.1', name: 'drivemio', description: 'Private Google Drive video library', resources: ['catalog', 'meta', 'stream'], types: ['movie'], catalogs: [{ type: 'movie', id: 'my-drive', name: 'My Drive' }], idPrefixes: ['tam_'] };
 const mediaHeaders = ['Content-Type', 'Content-Length', 'Content-Range', 'Accept-Ranges', 'ETag', 'Last-Modified', 'Content-Disposition'];
+const homePage = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DriveMio</title>
+  <style>
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; background: #0f172a; color: #f8fafc; font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 34rem; padding: 2rem; text-align: center; }
+    h1 { margin: 0 0 .5rem; font-size: clamp(2rem, 6vw, 3.5rem); letter-spacing: -.04em; }
+    p { margin: 0; color: #cbd5e1; }
+  </style>
+</head>
+<body><main><h1>Powered by DriveMio</h1><p>Private Google Drive streaming for Stremio-compatible apps.</p></main></body>
+</html>`;
 
 export async function handleRequest(request: Request, env: Env, fetcher: typeof fetch = fetch.bind(globalThis)): Promise<Response> {
   try {
     const url = new URL(request.url);
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     if (!['GET', 'HEAD'].includes(request.method)) return error(405, 'METHOD_NOT_ALLOWED');
+    if (url.pathname === '/') return new Response(request.method === 'HEAD' ? null : homePage, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
     const videoMatch = /^\/video\/([^/]+)$/.exec(url.pathname);
     if (videoMatch) {
       const fileId = pathPart(videoMatch[1]);
@@ -58,14 +74,6 @@ export async function handleRequest(request: Request, env: Env, fetcher: typeof 
     const parts = url.pathname.split('/').filter(Boolean);
     if (parts.length < 2 || !sameToken(parts[0], env.ADDON_TOKEN)) return error(404, 'NOT_FOUND');
     const route = parts.slice(1).join('/');
-    if (route === 'diagnostics/oauth.json') {
-      const response = await fetcher('https://oauth2.googleapis.com/token', {
-        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET, refresh_token: env.GOOGLE_REFRESH_TOKEN, grant_type: 'refresh_token' }),
-      });
-      const result = await response.json() as { error?: unknown; access_token?: unknown };
-      return json({ status: response.status, error: typeof result.error === 'string' ? result.error : null, valid: typeof result.access_token === 'string' });
-    }
     if (route === 'manifest.json') return json(manifest);
     if (route === 'catalog/movie/my-drive.json') return json({ metas: media.map(publicMeta) });
     const metaMatch = /^meta\/movie\/([^/]+)\.json$/.exec(route);
