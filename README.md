@@ -11,7 +11,7 @@ The project is designed for a single owner and does not provide multi-user accou
 - [English guide](docs/en/README.md)
 - [Vietnamese guide](docs/vi/README.md)
 
-The guides cover architecture, setup, common `make` commands, deployment, TV playback checks, and limitations.
+Both guides explain the example settings, walk through Google Drive and Cloudflare setup, and list every `make` command.
 
 ## Screenshots
 
