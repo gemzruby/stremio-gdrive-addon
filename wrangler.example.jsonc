@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "REPLACE_WITH_WORKER_NAME",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-01",
+  "vars": {
+    "PUBLIC_BASE_URL": "https://REPLACE_WITH_WORKER_NAME.REPLACE_WITH_SUBDOMAIN.workers.dev",
+    "STREAM_URL_TTL_SECONDS": "3600"
+  },
+  "secrets": {
+    "required": ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_REFRESH_TOKEN", "ADDON_TOKEN", "STREAM_SIGNING_SECRET"]
+  }
+}
