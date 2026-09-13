@@ -11,7 +11,15 @@ export class GoogleTokenProvider {
     } catch {
       throw new Error('GOOGLE_AUTH_NETWORK_FAILED');
     }
-    if (!response.ok) throw new Error('GOOGLE_AUTH_FAILED');
+    if (!response.ok) {
+      let oauthError = 'unknown';
+      try {
+        const data = await response.json() as { error?: unknown };
+        if (typeof data.error === 'string') oauthError = data.error;
+      } catch { /* Keep the generic error when Google returns a non-JSON response. */ }
+      console.error('Google OAuth refresh failed', { status: response.status, error: oauthError });
+      throw new Error('GOOGLE_AUTH_FAILED');
+    }
     const data = await response.json() as { access_token?: string; expires_in?: number };
     if (!data.access_token || !data.expires_in) throw new Error('GOOGLE_AUTH_FAILED');
     this.cached = { token: data.access_token, expiresAt: Date.now() + data.expires_in * 1000 };

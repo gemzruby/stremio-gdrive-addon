@@ -14,7 +14,7 @@ function sameToken(a: string, b: string): boolean {
   for (let i = 0; i < Math.max(aa.length, bb.length); i++) diff |= (aa[i] ?? 0) ^ (bb[i] ?? 0);
   return diff === 0;
 }
-const manifest = { id: 'com.tam.private-drive', version: '1.0.0', name: 'Tam Drive', description: 'Private Google Drive video library', resources: ['catalog', 'meta', 'stream'], types: ['movie'], catalogs: [{ type: 'movie', id: 'my-drive', name: 'My Drive' }], idPrefixes: ['tam_'] };
+const manifest = { id: 'com.tam.private-drive', version: '1.0.1', name: 'drivemio', description: 'Private Google Drive video library', resources: ['catalog', 'meta', 'stream'], types: ['movie'], catalogs: [{ type: 'movie', id: 'my-drive', name: 'My Drive' }], idPrefixes: ['tam_'] };
 const mediaHeaders = ['Content-Type', 'Content-Length', 'Content-Range', 'Accept-Ranges', 'ETag', 'Last-Modified', 'Content-Disposition'];
 
 export async function handleRequest(request: Request, env: Env, fetcher: typeof fetch = fetch.bind(globalThis)): Promise<Response> {
@@ -58,6 +58,14 @@ export async function handleRequest(request: Request, env: Env, fetcher: typeof 
     const parts = url.pathname.split('/').filter(Boolean);
     if (parts.length < 2 || !sameToken(parts[0], env.ADDON_TOKEN)) return error(404, 'NOT_FOUND');
     const route = parts.slice(1).join('/');
+    if (route === 'diagnostics/oauth.json') {
+      const response = await fetcher('https://oauth2.googleapis.com/token', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET, refresh_token: env.GOOGLE_REFRESH_TOKEN, grant_type: 'refresh_token' }),
+      });
+      const result = await response.json() as { error?: unknown; access_token?: unknown };
+      return json({ status: response.status, error: typeof result.error === 'string' ? result.error : null, valid: typeof result.access_token === 'string' });
+    }
     if (route === 'manifest.json') return json(manifest);
     if (route === 'catalog/movie/my-drive.json') return json({ metas: media.map(publicMeta) });
     const metaMatch = /^meta\/movie\/([^/]+)\.json$/.exec(route);
