@@ -13,8 +13,8 @@ The guides cover architecture, setup, common `make` commands, deployment, TV pla
 
 ## Screenshots
 
-![image { width: 2px; }](captures/Screenshot_2026_09_13_16_27_43_35_f1c980342b0e858ddfa283cbd93d4e69.jpg)
+[<img src="captures/Screenshot_2026_09_13_16_27_43_35_f1c980342b0e858ddfa283cbd93d4e69.jpg" width="300"/>](image.png)
 
-![image](captures/Screenshot_2026_09_13_16_28_01_90_f1c980342b0e858ddfa283cbd93d4e69.jpg)
+[<img src="captures/Screenshot_2026_09_13_16_28_01_90_f1c980342b0e858ddfa283cbd93d4e69.jpg"/>](image.png)
 
-![image](captures/Screenshot_2026_09_13_16_36_43.png)
+[<img src="captures/Screenshot_2026_09_13_16_36_43.png"/>](captures/Screenshot_2026_09_13_16_36_43.png)
