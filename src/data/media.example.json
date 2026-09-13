@@ -1,0 +1,13 @@
+[
+  {
+    "id": "tam_hongkong_2026",
+    "type": "movie",
+    "name": "Hong Kong 2026",
+    "description": "Video from a sample trip.",
+    "poster": "https://example.com/posters/hongkong-2026.jpg",
+    "background": "https://example.com/backgrounds/hongkong-2026.jpg",
+    "releaseInfo": "2026",
+    "driveFileId": "REPLACE_WITH_GOOGLE_DRIVE_FILE_ID",
+    "mimeType": "video/mp4"
+  }
+]

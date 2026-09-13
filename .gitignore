@@ -1,0 +1,9 @@
+node_modules/
+src/data/media.json
+.wrangler/
+wrangler.jsonc
+.dev.vars*
+!.dev.vars.example
+.env*
+.DS_Store
+coverage/

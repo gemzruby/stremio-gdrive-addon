@@ -1,0 +1,24 @@
+{
+  "name": "drivemio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "node scripts/ensure-media.mjs",
+    "dev": "wrangler dev",
+    "sync:media": "node --env-file=.dev.vars scripts/sync-media.mjs",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260911.1",
+    "@eslint/js": "^9.35.0",
+    "eslint": "^9.35.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.43.0",
+    "vitest": "^4.1.11",
+    "wrangler": "^4.37.0"
+  }
+}
